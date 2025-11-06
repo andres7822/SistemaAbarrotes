@@ -1,0 +1,38 @@
+<div class="col-md-{{ $colSize }} {{ $classDiv ?? '' }}" id="{{ $idDiv ?? '' }}">
+    @if($required)
+        <font color="red">*</font>
+    @endif
+    <label for="{{ $id }}" class="form-label">{{ $label }}:</label>
+    @switch($type)
+        @case('text')
+        @case('date')
+        @case('datetime-local')
+        @case('number')
+            <input type="{{ $type }}" class="form-control" id="{{ $id }}" name="{{ $id }}" value="{{ $value }}"
+                   placeholder="{{ $placeholder }}" {{ $focused ? 'autofocus' : '' }}>
+            @break
+        @case('textarea')
+            <textarea class="form-control" id="{{ $id }}" name="{{ $id }}" rows="5">{{ old($id, $value) }}</textarea>
+            @break
+        @case('select')
+            <select data-live-search="true" class="form-control selectpicker show-tick" name="{{ $id }}" id="{{ $id }}" data-size="5">
+                <option value="" selected>SELECCIONE UNA OPCIÓN...</option>
+                @foreach($params as $index => $param)
+                    <option data-index="{{ $index }}"
+                            value="{{ $param[$optionValue] }}" {{ $value == $param[$optionValue] ? 'selected' : '' }}>
+                        {{ $param[$optionContent] ?? $param['nombre'] ?? $param['name'] }}
+                        {{ $optionContentExtra != '' ? ' --- ' . data_get($param, $optionContentExtra) : '' }}
+                    </option>
+                @endforeach
+                @foreach($optionsExtra as $option)
+                    <option value="{{ $option['value'] }}" {{ $option['selected'] }}>
+                        {{ $option['content'] }}
+                    </option>
+                @endforeach
+            </select>
+            @break
+    @endswitch
+    @error($id)
+    <small class="text-danger">*{{ $message }}</small>
+    @enderror
+</div>
