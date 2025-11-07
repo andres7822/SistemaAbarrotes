@@ -17,7 +17,8 @@ class TipoMenuSeeder extends Seeder
         $TipoMenus = [
             'Vista',
             'Menú',
-            'Submenú',
+            'Subvista',
+            'Submenú'
         ];
 
         foreach ($TipoMenus as $tipoMenu) {

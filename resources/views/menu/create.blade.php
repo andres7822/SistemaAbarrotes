@@ -15,7 +15,7 @@
 @section('content')
 
     <div class="container-fluid px-4">
-        <h1 class="mt-4">Crear Nuevo Tarjeta</h1>
+        <h1 class="mt-4">Crear Nuevo Menú</h1>
 
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item"><a href="{{route('home')}}">Inicio</a></li>
@@ -56,10 +56,20 @@
                                     required="true"></x-form-element>
 
                     <!-- Menus -->
-                    <x-form-element classDiv="collapse {{ old('tipo_menu_id') == 3 ? 'show' : '' }} collapseMenu"
-                                    id="menu_id"
-                                    type="select" :params="$Menus"
-                                    required="true">
+                    <x-form-element
+                        idDiv="collapseMenu"
+                        classDiv="collapse {{ in_array(old('tipo_menu_id') , [3, 4]) ? 'show' : '' }}"
+                        id="menu_id"
+                        type="select" :params="$Menus"
+                        required="true">
+                    </x-form-element>
+
+                    <!-- Nombre ruta -->
+                    <x-form-element
+                        idDiv="collapseNombreRuta"
+                        classDiv="collapse {{ in_array(old('tipo_menu_id') , [1, 3]) ? 'show' : '' }}"
+                        id="nombre_ruta"
+                        required="true">
                     </x-form-element>
 
                     <!-- Botones -->
@@ -82,10 +92,18 @@
         })
 
         const MostrarMenus = (index) => {
-            if (index == 3) {
-                $('.collapseMenu').collapse('show');
-            } else {
-                $('.collapseMenu').collapse('hide');
+            if (index == 1) { //Vista
+                $('#collapseMenu').collapse('hide');
+                $('#collapseNombreRuta').collapse('show');
+            } else if (index == 2) { //Menu
+                $('#collapseMenu').collapse('hide');
+                $('#collapseNombreRuta').collapse('hide');
+            } else if (index == 3) { //Subvista
+                $('#collapseMenu').collapse('show');
+                $('#collapseNombreRuta').collapse('show');
+            } else { //Submenu
+                $('#collapseMenu').collapse('show');
+                $('#collapseNombreRuta').collapse('hide');
             }
         }
     </script>

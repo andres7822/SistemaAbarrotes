@@ -16,6 +16,7 @@ class CreateMenusTable extends Migration
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
             $table->string('nombre', 128);
+            $table->string('nombre_ruta', 32)->nullable();
             $table->text('descripcion')->nullable();
             $table->foreignId('icono_id')->constrained('iconos');
             $table->foreignId('tipo_menu_id')->constrained('tipo_menus');

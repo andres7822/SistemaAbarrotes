@@ -24,5 +24,13 @@ class Menu extends Model
         return $this->belongsTo(Menu::class);
     }
 
+    public function subs()
+    {
+        return $this->hasMany(Menu::class, 'menu_id')
+            ->with('subs')
+            ->orderBy('tipo_menu_id')
+            ->orderBy('nombre');
+    }
+
     protected $guarded = ['id'];
 }
