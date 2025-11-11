@@ -29,6 +29,7 @@ class Menu extends Model
         return $this->hasMany(Menu::class, 'menu_id')
             ->with('subs')
             ->orderBy('tipo_menu_id')
+            ->orderBy('prioridad')
             ->orderBy('nombre');
     }
 

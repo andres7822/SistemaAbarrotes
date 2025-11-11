@@ -3,6 +3,7 @@
 @section('title','Editar Menu')
 
 @push('css')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
     <style>
@@ -39,22 +40,62 @@
                     <x-form-element id="descripcion" type="textarea" value="{{ $Menu->descripcion }}">
                     </x-form-element>
 
-                    <!-- Iconos -->
-                    <x-form-element id="icono_id" type="select" required="true" :params="$Iconos"
-                                    value="{{ $Menu->icono_id }}">
+                    <!-- Prioridad -->
+                    <x-form-element id="prioridad" value="{{ $Menu->prioridad }}" colSize="6"
+                                    placeholder="Especifique con un número">
                     </x-form-element>
+
+                    <!-- Icono -->
+                    <div class="col-md-6">
+                        <font color="red">*</font><label for="icono_id" class="form-label">Icono</label>
+                        <select name="icono_id" id="icono_id" class="form-control selectpicker show-tick"
+                                data-live-search="true" data-size="5">
+                            <option value="" selected>SELECCIONE UNA OPCIÓN</option>
+                            <option value="1"
+                                    data-content="<i class='fa fa-address-book'></i> fa fa-address-book">
+                            </option>
+
+                            @foreach($Iconos as $Icono)
+                                <option value="{{ $Icono->id }}"
+                                        data-content="<i class='{{ $Icono->nombre }}'></i> {{ $Icono->nombre }}"
+                                    {{ $Icono->id == old('icono_id', $Menu->icono_id) ? 'selected' : '' }}
+                                >
+                                    {{ $Icono->nombre }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                    </div>
+                    @error('icono_id')
+                    <small class="text-danger">{{ $message }}</small>
+                    @enderror
 
                     <!-- Tipo Menu -->
                     <x-form-element id="tipo_menu_id" type="select" required="true" :params="$TipoMenus"
-                                    value="{{ $Menu->tipo_menu_id }}">
+                                    value="{{ $Menu->tipo_menu_id }}" colSize="4">
                     </x-form-element>
 
                     <!-- Menus -->
                     <x-form-element idDiv="collapseMenus"
-                                    classDiv="collapse {{ old('tipo_menu_id', $Menu->tipo_menu_id) == 3 ? 'show' : '' }}"
-                                    id="menu_id" type="select" required="true" :params="$Menus"
-                                    value="{{ $Menu->menu_id }}">
+                                    classDiv="collapse {{ in_array(old('tipo_menu_id', $Menu->tipo_menu_id) , [3, 4]) ? 'show' : '' }}"
+                                    id="menu_id"
+                                    type="select" :params="$Menus"
+                                    value="{{ $Menu->menu_id }}"
+                                    colSize="4"
+                                    required="true">
                     </x-form-element>
+
+                    <!-- Nombre ruta -->
+                    <x-form-element
+                        idDiv="collapseNombreRuta"
+                        classDiv="collapse {{ in_array(old('tipo_menu_id', $Menu->tipo_menu_id) , [1, 3]) ? 'show' : '' }}"
+                        id="nombre_ruta"
+                        value="{{ $Menu->nombre_ruta }}"
+                        colSize="4"
+                        required="true">
+                    </x-form-element>
+
+                    <div class="row"></div>
 
                     <x-form-buttons routeName="menu" isEdit="true"></x-form-buttons>
 
@@ -69,18 +110,33 @@
 @push('js')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
     <script>
+
         $(document).ready(function () {
+            $(function () {
+                $('.selectpicker').selectpicker();
+            });
+
             $('#tipo_menu_id').change(function () {
-                MostrarMenus($(this).val());
+                MostrarMenus($(this).val())
             })
-        });
+        })
 
         const MostrarMenus = (index) => {
-            if (index == 3) {
-                $('#collapseMenus').collapse('show');
-            } else {
+            console.log(index)
+            if (index == 1) { //Vista
                 $('#collapseMenus').collapse('hide');
+                $('#collapseNombreRuta').collapse('show');
+            } else if (index == 2) { //Menu
+                $('#collapseMenus').collapse('hide');
+                $('#collapseNombreRuta').collapse('hide');
+            } else if (index == 3) { //Subvista
+                $('#collapseMenus').collapse('show');
+                $('#collapseNombreRuta').collapse('show');
+            } else { //Submenu
+                $('#collapseMenus').collapse('show');
+                $('#collapseNombreRuta').collapse('hide');
             }
         }
+
     </script>
 @endpush

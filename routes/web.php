@@ -8,6 +8,7 @@ use App\Http\Controllers\logoutController;
 use App\Http\Controllers\menuController;
 use App\Http\Controllers\productoController;
 use App\Http\Controllers\subcategoriaController;
+use App\Http\Controllers\userController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,6 +34,12 @@ Route::middleware('auth')->group(function () {
         'categoria' => categoriaController::class,
         'subcategoria' => subcategoriaController::class,
         'producto' => productoController::class,
-        'cliente' => clienteController::class
+        'cliente' => clienteController::class,
+        'user' => userController::class
+    ], [
+        'parameters' => [
+            'categoria' => 'categoria',
+            'subcategoria' => 'subcategoria'
+        ]
     ]);
 });

@@ -33,6 +33,7 @@
                         <th>id</th>
                         <th>Nombre</th>
                         <th>Descripción</th>
+                        <th>Prioridad</th>
                         <th>Icono</th>
                         <th>Tipo Menú</th>
                         <th>Acciones</th>
@@ -44,13 +45,14 @@
                             <td>{{ $Menu->id }}</td>
                             <td>{{ $Menu->nombre }}</td>
                             <td>{{ $Menu->descripcion }}</td>
+                            <td>{{ $Menu->prioridad ?? '' }}</td>
                             <td>
                                 <i class="{{ $Menu->icono->nombre }}"></i>
                                 {{ $Menu->icono->nombre }}
                             </td>
                             <td>
                                 {{ $Menu->tipo_menu->nombre }}
-                                @if($Menu->tipo_menu_id == 3)
+                                @if($Menu->tipo_menu_id == 3 || $Menu->tipo_menu_id == 4)
                                     <p class="opacity-50">
                                         {{$Menu->menu->nombre}}
                                     </p>

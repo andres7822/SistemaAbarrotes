@@ -8,7 +8,7 @@ use Illuminate\View\Component;
 class FormElement extends Component
 {
     public $id, $label, $type, $value, $colSize, $required, $params, $placeholder, $optionValue, $optionContent,
-        $optionContentExtra, $optionsExtra, $classDiv, $idDiv, $focused;
+        $optionContentExtra, $optionsExtraFirst, $optionsExtraEnd, $classDiv, $idDiv, $focused;
 
     /**
      * @param $id
@@ -22,7 +22,8 @@ class FormElement extends Component
      * @param string $optionValue
      * @param string $optionContent
      * @param string $optionContentExtra
-     * @param array $optionsExtra
+     * @param array $optionsExtraFirst
+     * @param array $optionsExtraEnd
      * @param string $classDiv
      * @param string $idDiv
      * @param bool $focused
@@ -30,7 +31,8 @@ class FormElement extends Component
     public function __construct($id, $label = null, string $type = 'text', $value = null, int $colSize = 12,
                                 bool $required = false, object $params = null, string $placeholder = '',
                                 string $optionValue = 'id', string $optionContent = '', string $optionContentExtra = '',
-                                array $optionsExtra = [], string $classDiv = '', string $idDiv = '', bool $focused = false)
+                                array $optionsExtraFirst = [], array $optionsExtraEnd = [], string $classDiv = '',
+                                string $idDiv = '', bool $focused = false)
     {
         $this->id = $id;
         $this->label = $label ?? Str::of($id)->replace(['_id', '_'], ['', ' '])->title();
@@ -43,7 +45,8 @@ class FormElement extends Component
         $this->optionValue = $optionValue;
         $this->optionContent = $optionContent;
         $this->optionContentExtra = $optionContentExtra;
-        $this->optionsExtra = $optionsExtra;
+        $this->optionsExtraFirst = $optionsExtraFirst;
+        $this->optionsExtraEnd = $optionsExtraEnd;
         $this->classDiv = $classDiv;
         $this->idDiv = $idDiv;
         $this->focused = $focused;

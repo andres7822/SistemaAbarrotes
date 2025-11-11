@@ -17,6 +17,11 @@
         @case('select')
             <select data-live-search="true" class="form-control selectpicker show-tick" name="{{ $id }}" id="{{ $id }}" data-size="5">
                 <option value="" selected>SELECCIONE UNA OPCIÓN...</option>
+                @foreach($optionsExtraFirst as $option)
+                    <option value="{{ $option['value'] }}" {{ $option['selected'] }}>
+                        {{ $option['content'] }}
+                    </option>
+                @endforeach
                 @foreach($params as $index => $param)
                     <option data-index="{{ $index }}"
                             value="{{ $param[$optionValue] }}" {{ $value == $param[$optionValue] ? 'selected' : '' }}>
@@ -24,7 +29,7 @@
                         {{ $optionContentExtra != '' ? ' --- ' . data_get($param, $optionContentExtra) : '' }}
                     </option>
                 @endforeach
-                @foreach($optionsExtra as $option)
+                @foreach($optionsExtraEnd as $option)
                     <option value="{{ $option['value'] }}" {{ $option['selected'] }}>
                         {{ $option['content'] }}
                     </option>

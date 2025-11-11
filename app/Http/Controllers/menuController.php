@@ -16,61 +16,14 @@ class menuController extends Controller
     public function index()
     {
 
-        $Menus = Menu::whereNull('menu_id')
+        /*$Menus = Menu::whereNull('menu_id')
             ->orderBy('tipo_menu_id')
             ->orderBy('nombre')
             ->with('subs')
-            ->get();
-        return $Menus;
+            ->get();*/
 
-        $MenuVista = '';
-
-        foreach ($Menus as $Menu) {
-            if ($Menu->tipo_menu_id == 1) {
-                $MenuVista .= sprintf("
-<a class='nav-link' href='%s'>
-    <div class='sb-nav-link-icon'><i class='%s'></i></div>
-    %s
-</a>
-                ", route($Menu->nombre_ruta . '.index'), $Menu->icono->nombre, $Menu->nombre);
-            } else {
-                $MenuVista .= sprintf("
-<a class='nav-link collapsed' href='#' data-bs-toggle='collapse' data-bs-target='collapse%s'
-    aria-expanded='false' aria-controls='collapse%s'>
-    <div class='sb-nav-link-icon'><i class='%s'></i></div>
-    %s
-    <div class='sb-sidenav-collapse-arrow'><i class='fas fa-angle-down'></i></div>
-</a>
-<div class='collpase' id='collapse%s' aria-labelledby='headingOne'
-    data-bs-parent='#sidenavAccordion'>
-    <nav class='sb-sidenav-menu-nested nav'>
-    <!--#OPCIONES#-->
-    </nav>
-</div>
-                ", str_replace(' ', '', $Menu->nombre), str_replace(' ', '', $Menu->nombre),
-                    $Menu->icono->nombre, $Menu->nombre, str_replace(' ', '', $Menu->nombre));
-                return $this->submenus($Menu);
-                $MenuVista = str_replace('<!--#OPCIONES-->', 2, $MenuVista);
-            }
-        }
-
-        //$Menus = Menu::all();
-        //return view('menu.index', compact('Menus'));
-    }
-
-    public function submenus($Menu)
-    {
-        $Opciones = '';
-
-        foreach ($Menu->subs as $index => $item) {
-            if ($item->tipo_menu_id == 4) {
-                $Opciones .= sprintf("
-<a class='nav-link' href='%s'>%s</a>
-        ", route($Menu->nombre_ruta . '.index'), $Menu->nombre);
-            }
-        }
-
-        return $Opciones;
+        $Menus = Menu::all();
+        return view('menu.index', compact('Menus'));
     }
 
     /**
@@ -143,7 +96,9 @@ class menuController extends Controller
 
         $TipoMenus = TipoMenu::all();
 
-        $Menus = Menu::all();
+        $Menus = Menu::whereNotIn('id', [$Menu->id])
+            ->whereNotIn('tipo_menu_id', [1, 3])
+            ->get();
 
         return view('menu.edit', compact('Iconos', 'TipoMenus', 'Menus', 'Menu'));
     }
@@ -159,8 +114,12 @@ class menuController extends Controller
             'tipo_menu_id' => 'required|exists:tipo_menus,id'
         ];
 
-        if ($request->tipo_menu_id == 3) {
+        if (in_array($request->tipo_menu_id, [3, 4])) {
             $requestArray['menu_id'] = 'required|exists:menus,id';
+        }
+
+        if (in_array($request->tipo_menu_id, [1, 3])) {
+            $requestArray['nombre_ruta'] = 'required|max:32|unique:menus,nombre_ruta,' . $Menu->id;
         }
 
         $request->validate($requestArray);
