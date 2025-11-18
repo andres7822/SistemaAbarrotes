@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class UserSeeder extends Seeder
 {
@@ -14,12 +15,13 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        User::insert([
-            [
-                'name' => 'admin',
-                'email' => 'admin@gmail.com',
-                'password' => bcrypt('admin')
-            ]
+        $user = User::create([
+            'name' => 'Desarrolador de sistema',
+            'username' => 'developer',
+            'email' => 'developer@gmail.com',
+            'password' => bcrypt('12')
         ]);
+
+        $user->assignRole('1');
     }
 }

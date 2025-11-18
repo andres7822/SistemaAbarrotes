@@ -7,6 +7,7 @@ use App\Http\Controllers\loginController;
 use App\Http\Controllers\logoutController;
 use App\Http\Controllers\menuController;
 use App\Http\Controllers\productoController;
+use App\Http\Controllers\roleController;
 use App\Http\Controllers\subcategoriaController;
 use App\Http\Controllers\userController;
 use Illuminate\Support\Facades\Route;
@@ -35,7 +36,8 @@ Route::middleware('auth')->group(function () {
         'subcategoria' => subcategoriaController::class,
         'producto' => productoController::class,
         'cliente' => clienteController::class,
-        'user' => userController::class
+        'user' => userController::class,
+        'role' => roleController::class
     ], [
         'parameters' => [
             'categoria' => 'categoria',

@@ -22,7 +22,7 @@ class TipoMenuSeeder extends Seeder
         ];
 
         foreach ($TipoMenus as $tipoMenu) {
-            TipoMenu::create(['Nombre' => $tipoMenu]);
+            TipoMenu::create(['nombre' => $tipoMenu]);
         }
     }
 }

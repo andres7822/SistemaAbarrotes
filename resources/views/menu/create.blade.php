@@ -126,38 +126,3 @@
 
     </script>
 @endpush
-
-
-public function store(Request $request)
-{
-$requestArray = [
-'nombre' => 'required|max:128|unique:menus,nombre',
-'icono_id' => 'required|exists:iconos,id',
-'tipo_menu_id' => 'required|exists:tipo_menus,id'
-];
-
-if (in_array($request->tipo_menu_id, [3, 4])) {
-$requestArray['menu_id'] = 'required|exists:menus,id';
-}
-
-if (in_array($request->tipo_menu_id, [1, 3])) {
-$requestArray['nombre_ruta'] = 'required|max:32|unique:menus,nombre_ruta';
-}
-
-$request->validate($requestArray);
-
-try {
-DB::beginTransaction();
-Menu::create($request->all());
-$Mensaje = 'success__Agregado correctamente';
-DB::commit();
-} catch (\Exception $e) {
-DB::rollBack();
-$Mensaje = 'error__' . $e->getMessage();
-}
-
-if ($request->accion == 'continuar') {
-return redirect()->route('menu.index')->with('mensaje', $Mensaje);
-}
-return redirect()->route('menu.create')->with('mensaje', $Mensaje);
-}

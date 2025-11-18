@@ -34,10 +34,14 @@
                                 @endif
                                 <form action="/login" method="post">
                                     @csrf
-                                    <div class="form-floating mb-3">
+                                    {{--<div class="form-floating mb-3">
                                         <input class="form-control" name="email" id="inputEmail" type="email"
                                                placeholder="name@example.com"/>
                                         <label for="inputEmail">Correo Electrónico</label>
+                                    </div>--}}
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" name="username" id="inputUsername" type="text" placeholder="Usuario"/>
+                                        <label for="inputUsername">Usuario</label>
                                     </div>
                                     <div class="form-floating mb-3">
                                         <input class="form-control" name="password" id="inputPassword"

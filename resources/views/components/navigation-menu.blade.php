@@ -10,13 +10,13 @@
                 </a>
                 <div class="sb-sidenav-menu-heading">Modulos</div>
 
-                <?php print $MenuVista?>
+                <?php print $MenuVista ?>
 
             </div>
         </div>
         <div class="sb-sidenav-footer">
             <div class="small">Bienvenido:</div>
-            {{--{{auth()->user()->name}}--}}
+            {{ auth()->user()->name }} - {{ auth()->user()->getRoleNames()->first() }}
         </div>
     </nav>
 </div>

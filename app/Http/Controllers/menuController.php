@@ -7,9 +7,21 @@ use App\Models\Menu;
 use App\Models\TipoMenu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Permission;
 
 class menuController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['auth', 'superadmin']); // superadmin primero
+
+        // Luego vienen los permisos
+        $this->middleware('permission:ver-menu|crear-menu|editar-menu|eliminar-menu', ['only' => ['index', 'show']]);
+        $this->middleware('permission:crear-menu', ['only' => ['create', 'store']]);
+        $this->middleware('permission:editar-menu', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:eliminar-menu', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -62,12 +74,31 @@ class menuController extends Controller
 
         try {
             DB::beginTransaction();
-            Menu::create($request->all());
+            $Menu = Menu::create($request->all());
+
+            $arrPermision = [
+                'ver-',
+                'crear-',
+                'editar-',
+                'eliminar-',
+            ];
+
+            if (in_array($request->tipo_menu_id, [1, 3])) {
+                foreach ($arrPermision as $index => $item) {
+                    Permission::create([
+                        'name' => $item . $request->nombre_ruta,
+                        'menu_id' => $Menu->id,
+                        'type_permission_id' => $index + 1
+                    ]);
+                }
+            }
+
             $Mensaje = 'success__Agregado correctamente';
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
             $Mensaje = 'error__' . $e->getMessage();
+            return redirect()->route('menu.create')->with('mensaje', $Mensaje);
         }
 
         if ($request->accion == 'continuar') {

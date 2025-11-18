@@ -8,6 +8,8 @@
         @case('date')
         @case('datetime-local')
         @case('number')
+        @case('email')
+        @case('password')
             <input type="{{ $type }}" class="form-control" id="{{ $id }}" name="{{ $id }}" value="{{ $value }}"
                    placeholder="{{ $placeholder }}" {{ $focused ? 'autofocus' : '' }}>
             @break
