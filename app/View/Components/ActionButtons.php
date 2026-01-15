@@ -6,7 +6,7 @@ use Illuminate\View\Component;
 
 class ActionButtons extends Component
 {
-    public $routeName, $params, $restaurar, $showButton;
+    public $routeName, $params, $restaurar, $showButton, $userId, $roleId;
 
     /**
      * @param string $routeName
@@ -14,12 +14,15 @@ class ActionButtons extends Component
      * @param bool $restaurar
      * @param bool $showButton
      */
-    public function __construct(string $routeName = '', object $params = null, bool $restaurar = false, bool $showButton = false)
+    public function __construct(string $routeName = '', object $params = null, bool $restaurar = false,
+                                bool   $showButton = false)
     {
         $this->routeName = $routeName;
         $this->params = $params;
         $this->restaurar = $restaurar;
         $this->showButton = $showButton;
+        $this->userId = auth()->user()->id;
+        $this->roleId = auth()->user()->roles->first()->id;
     }
 
 

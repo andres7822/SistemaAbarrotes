@@ -42,7 +42,7 @@
 
                     <!-- Prioridad -->
                     <x-form-element id="prioridad" value="{{ $Menu->prioridad }}" colSize="6"
-                                    placeholder="Especifique con un número">
+                                    placeholder="Especifique con un número" required="true">
                     </x-form-element>
 
                     <!-- Icono -->

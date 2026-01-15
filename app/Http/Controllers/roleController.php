@@ -9,17 +9,11 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-class roleController extends Controller
+class roleController extends actionPermissionController
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'superadmin']); // superadmin primero
-
-        // Luego vienen los permisos
-        $this->middleware('permission:ver-role|crear-role|editar-role|eliminar-role', ['only' => ['index', 'show']]);
-        $this->middleware('permission:crear-role', ['only' => ['create', 'store']]);
-        $this->middleware('permission:editar-role', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:eliminar-role', ['only' => ['destroy']]);
+        parent::__construct('role');
     }
 
     /**

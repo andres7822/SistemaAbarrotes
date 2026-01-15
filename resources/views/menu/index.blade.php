@@ -1,6 +1,6 @@
 @extends('template')
 
-@section('title', 'Menus')
+@section('title','Menus')
 
 @push('css')
 
@@ -16,15 +16,12 @@
             <li class="breadcrumb-item active">Menus</li>
         </ol>
 
-        <div class="mb-4">
-            <a href="{{route('menu.create')}}" class="btn btn-success">Nuevo</a>
-            {{--<a href="#" class="btn btn-warning">Editar</a>--}}
-        </div>
+        <x-action-buttons-head routeName="menu"></x-action-buttons-head>
 
         <div class="card mb-4">
             <div class="card-header">
                 <i class="fas fa-table me-1"></i>
-                Tabla Menús
+                Tabla Menus
             </div>
             <div class="card-body">
                 <table id="datatablesSimple" class="table table-striped">
@@ -35,31 +32,38 @@
                         <th>Descripción</th>
                         <th>Prioridad</th>
                         <th>Icono</th>
-                        <th>Tipo Menú</th>
+                        <th>Tipo Menu</th>
                         <th>Acciones</th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach($Menus as $Menu)
                         <tr>
+                            <!-- id -->
                             <td>{{ $Menu->id }}</td>
+                            <!-- Nombre -->
                             <td>{{ $Menu->nombre }}</td>
-                            <td>{{ $Menu->descripcion }}</td>
-                            <td>{{ $Menu->prioridad ?? '' }}</td>
+                            <!-- Descripción -->
+                            <td>{{ $Menu->descripcon ?? '' }}</td>
+                            <!-- Prioridad -->
+                            <td>{{ $Menu->prioridad }}</td>
+                            <!-- Icono -->
                             <td>
-                                <i class="{{ $Menu->icono->nombre }}"></i>
                                 {{ $Menu->icono->nombre }}
                             </td>
+                            <!-- Tipo Menu -->
                             <td>
                                 {{ $Menu->tipo_menu->nombre }}
-                                @if($Menu->tipo_menu_id == 3 || $Menu->tipo_menu_id == 4)
-                                    <p class="opacity-50">
-                                        {{$Menu->menu->nombre}}
-                                    </p>
+                                @if(in_array($Menu->tipo_menu->id, [3,4]))
+                                    <p class="opacity-50">{{ $Menu->menu->nombre }}</p>
                                 @endif
                             </td>
-                            <x-action-buttons routeName="menu" :params="$Menu"></x-action-buttons>
+                            <!--BOTONES ACCION-->
+                            <x-action-buttons routeName="menu" :params="$Menu">
+                            </x-action-buttons>
+
                         </tr>
+
                     @endforeach
                     </tbody>
                 </table>

@@ -16,10 +16,7 @@
             <li class="breadcrumb-item active">Categorias</li>
         </ol>
 
-        <div class="mb-4">
-            <a href="{{route('categoria.create')}}" class="btn btn-success">Nuevo</a>
-            {{--<a href="#" class="btn btn-warning">Editar</a>--}}
-        </div>
+        <x-action-buttons-head routeName="categoria"></x-action-buttons-head>
 
         <div class="card mb-4">
             <div class="card-header">
@@ -40,9 +37,9 @@
                     @foreach($Categorias as $Categoria)
                         <tr>
                             <!-- id -->
-                            <td>{{$Categoria->id}}</td>
+                            <td>{{ $Categoria->id }}</td>
                             <!-- Nombre -->
-                            <td>{{$Categoria->nombre}}</td>
+                            <td>{{ $Categoria->nombre }}</td>
                             <!-- Estado -->
                             <td class="text-center">
                                 @if($Categoria->estado == 1)

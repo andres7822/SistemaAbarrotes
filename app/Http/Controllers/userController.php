@@ -11,18 +11,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 
-class userController extends Controller
+class userController extends actionPermissionController
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'superadmin']); // superadmin primero
-
-        // Luego vienen los permisos
-        $this->middleware('permission:ver-user|crear-user|editar-user|eliminar-user', ['only' => ['index', 'show']]);
-        $this->middleware('permission:crear-user', ['only' => ['create', 'store']]);
-        $this->middleware('permission:editar-user', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:eliminar-user', ['only' => ['destroy']]);
+        parent::__construct('user');
     }
+
     /**
      * Display a listing of the resource.
      */

@@ -16,10 +16,7 @@
             <li class="breadcrumb-item active">Roles</li>
         </ol>
 
-        <div class="mb-4">
-            <a href="{{route('role.create')}}" class="btn btn-success">Nuevo</a>
-            {{--<a href="#" class="btn btn-warning">Editar</a>--}}
-        </div>
+        <x-action-buttons-head routeName="role"></x-action-buttons-head>
 
         <div class="card mb-4">
             <div class="card-header">

@@ -9,16 +9,13 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class categoriaController extends Controller
+class categoriaController extends actionPermissionController
 {
+
     public function __construct()
     {
-        $this->middleware('permission:ver-categoria|crear-categoria|editar-categoria|eliminar-categoria', ['only' => ['index', 'show']]);
-        $this->middleware('permission:crear-categoria', ['only' => ['create', 'store']]);
-        $this->middleware('permission:editar-categoria', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:eliminar-categoria', ['only' => ['destroy']]);
+        parent::__construct('categoria');
     }
-
 
     /**
      * Display a listing of the resource.
@@ -44,8 +41,9 @@ class categoriaController extends Controller
     {
         try {
             DB::beginTransaction();
-            Categoria::create($request->all());
+            $Categoria = Categoria::create($request->all());
             $Mensaje = 'success__Agregado correctamente';
+            $this->register->registro('categorias', $Categoria->id, 4, ['nombre' => $request->nombre]);
             DB::commit();
         } catch (Exception $e) {
             $Mensaje = 'error__' . $e->getMessage();
@@ -86,6 +84,7 @@ class categoriaController extends Controller
                     'nombre' => $request->nombre
                 ]);
             $Mensaje = 'success__Actualizado correctamente';
+            $this->register->registro('categorias', $Categoria->id, 5, ['nombre' => $request->nombre]);
             DB::commit();
         } catch (Exception $e) {
             $Mensaje = 'error__' . $e->getMessage();
@@ -105,11 +104,16 @@ class categoriaController extends Controller
             if ($Categoria->subcategoria->count() < 1) {
                 $Categoria->delete();
                 $Mensaje = 'success__Eliminado correctamente';
+                $this->register->registro('categorias', $Categoria->id, 6, $Categoria->toArray());
             } else if ($Categoria->estado == 1) {
-                $Categoria->update(['estado' => 0]);
-                $Mensaje = 'success__Se detectaron registrados asociados';
+                Categoria::where('id', $id)
+                    ->update(['estado' => 0]);
+                $Mensaje = 'success__Se detectaron registros asociados';
+                $this->register->registro('categorias', $Categoria->id, 5, ['estado' => 0]);
             } else {
-                $Categoria->update(['estado' => 1]);
+                Categoria::where('id', $id)
+                    ->update(['estado' => 1]);
+                $this->register->registro('categorias', $Categoria->id, 5, ['estado' => 1]);
                 $Mensaje = 'success__Restaurado correctamente';
             }
             DB::commit();

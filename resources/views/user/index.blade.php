@@ -16,10 +16,7 @@
             <li class="breadcrumb-item active">Usuarios</li>
         </ol>
 
-        <div class="mb-4">
-            <a href="{{route('user.create')}}" class="btn btn-success">Nuevo</a>
-            {{--<a href="#" class="btn btn-warning">Editar</a>--}}
-        </div>
+        <x-action-buttons-head routeName="user"></x-action-buttons-head>
 
         <div class="card mb-4">
             <div class="card-header">

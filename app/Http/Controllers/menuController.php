@@ -9,17 +9,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 
-class menuController extends Controller
+class menuController extends actionPermissionController
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'superadmin']); // superadmin primero
-
-        // Luego vienen los permisos
-        $this->middleware('permission:ver-menu|crear-menu|editar-menu|eliminar-menu', ['only' => ['index', 'show']]);
-        $this->middleware('permission:crear-menu', ['only' => ['create', 'store']]);
-        $this->middleware('permission:editar-menu', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:eliminar-menu', ['only' => ['destroy']]);
+        parent::__construct('menu');
     }
 
     /**

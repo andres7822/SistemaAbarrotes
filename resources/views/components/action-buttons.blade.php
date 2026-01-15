@@ -3,27 +3,47 @@
         <div class="btn-group" role="group" aria-label="Basic mixed styles example">
 
             @if($params->estado == 1)
+                @if($roleId == 1)
+                    <form action="{{ route($routeName . '.edit', [$routeName => $params])}}" method="get">
+                        <button type="submit" class="btn btn-sm btn-warning" title="Editar">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </button>&nbsp;
+                    </form>
 
-                <form action="{{ route($routeName . '.edit', [$routeName => $params])}}" method="get">
-                    <button type="submit" class="btn btn-sm btn-warning" title="Editar">
-                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                            data-bs-target="#ConfirmModal-{{$params->id}}" title="Eliminar">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
                     </button>&nbsp;
-                </form>
-
-                <button class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                        data-bs-target="#ConfirmModal-{{$params->id}}" title="Eliminar">
-                    <i class="fa fa-trash" aria-hidden="true"></i>
-                </button>&nbsp;
-
+                @else
+                    @can('editar-' . $routeName)
+                        <form action="{{ route($routeName . '.edit', [$routeName => $params])}}" method="get">
+                            <button type="submit" class="btn btn-sm btn-warning" title="Editar">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </button>&nbsp;
+                        </form>
+                    @endcan
+                    @can('eliminar-' . $routeName)
+                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                data-bs-target="#ConfirmModal-{{$params->id}}" title="Eliminar">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>&nbsp;
+                    @endcan
+                @endif
             @else
-
-                <button class="btn btn-sm btn-success" data-bs-toggle="modal"
-                        data-bs-target="#ConfirmModal-{{$params->id}}">
-                    Restaurar
-                </button>&nbsp;
-
+                @if($roleId == 1)
+                    <button class="btn btn-sm btn-success" data-bs-toggle="modal"
+                            data-bs-target="#ConfirmModal-{{$params->id}}">
+                        Restaurar
+                    </button>&nbsp;
+                @else
+                    @can('editar-' . $routeName)
+                        <button class="btn btn-sm btn-success" data-bs-toggle="modal"
+                                data-bs-target="#ConfirmModal-{{$params->id}}">
+                            Restaurar
+                        </button>&nbsp;
+                    @endcan
+                @endif
             @endif
-
         </div>
     </td>
 
@@ -78,18 +98,39 @@
                 </form>&nbsp;
             @endif
 
-            <form
-                action="{{ route($routeName . '.edit', [$routeName => $params])}}"
-                method="get">
-                <button type="submit" class="btn btn-sm btn-warning" title="Editar">
-                    <i class="fa fa-pencil" aria-hidden="true"></i>
-                </button>&nbsp;
-            </form>
+            @if($roleId == 1)
+                <form
+                    action="{{ route($routeName . '.edit', [$routeName => $params])}}"
+                    method="get">
+                    <button type="submit" class="btn btn-sm btn-warning" title="Editar">
+                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                    </button>&nbsp;
+                </form>
 
-            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#ConfirmModal-{{$params->id}}"
-                    title="Eliminar">
-                <i class="fa fa-trash" aria-hidden="true"></i>
-            </button>&nbsp;
+                <button class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                        data-bs-target="#ConfirmModal-{{$params->id}}"
+                        title="Eliminar">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                </button>&nbsp;
+            @else
+                @can('editar-' . $routeName)
+                    <form
+                        action="{{ route($routeName . '.edit', [$routeName => $params])}}"
+                        method="get">
+                        <button type="submit" class="btn btn-sm btn-warning" title="Editar">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </button>&nbsp;
+                    </form>
+                @endcan
+                @can('eliminar-' . $routeName)
+                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                            data-bs-target="#ConfirmModal-{{$params->id}}"
+                            title="Eliminar">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                    </button>&nbsp;
+                @endcan
+            @endif
+
 
         </div>
 

@@ -10,14 +10,24 @@
         @case('number')
         @case('email')
         @case('password')
-            <input type="{{ $type }}" class="form-control" id="{{ $id }}" name="{{ $id }}" value="{{ $value }}"
-                   placeholder="{{ $placeholder }}" {{ $focused ? 'autofocus' : '' }}>
+        @case('checkbox')
+            <input type="{{ $type }}" class="form-control {{ $classForm }}" id="{{ $id }}" name="{{ $id }}"
+                   value="{{ $value }}"
+                   placeholder="{{ $placeholder }}" {{ $focused ? 'autofocus' : '' }} {{ $readonly ? 'readonly disabled' : '' }}
+                {{ $dataOptions }}>
+            @break
+        @case('file')
+            <input type="{{ $type }}" class="form-control {{ $classForm }}" id="{{ $id }}" name="{{ $id }}"
+                   accept="{{ $accept }}">
             @break
         @case('textarea')
-            <textarea class="form-control" id="{{ $id }}" name="{{ $id }}" rows="5">{{ old($id, $value) }}</textarea>
+            <textarea class="form-control {{ $classForm }}" id="{{ $id }}" name="{{ $id }}"
+                      rows="5">{{ old($id, $value) }}</textarea>
             @break
         @case('select')
-            <select data-live-search="true" class="form-control selectpicker show-tick" name="{{ $id }}" id="{{ $id }}" data-size="5">
+            <select data-live-search="true" class="form-control selectpicker show-tick {{ $classForm }}"
+                    name="{{ $id }}" id="{{ $id }}"
+                    data-size="5">
                 <option value="" selected>SELECCIONE UNA OPCIÓN...</option>
                 @foreach($optionsExtraFirst as $option)
                     <option value="{{ $option['value'] }}" {{ $option['selected'] }}>

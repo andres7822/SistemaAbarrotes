@@ -35,10 +35,11 @@
                     <x-form-element id="descripcion" type="textarea"></x-form-element>
 
                     <!-- Prioridad -->
-                    <x-form-element id="prioridad" placeholder="Especifique con un número"></x-form-element>
+                    <x-form-element id="prioridad" placeholder="Especifique con un número" required="true"
+                                    colSize="6"></x-form-element>
 
                     <!-- Icono -->
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <font color="red">*</font><label for="icono_id" class="form-label">Icono</label>
                         <select name="icono_id" id="icono_id" class="form-control selectpicker show-tick"
                                 data-live-search="true" data-size="5">
@@ -63,8 +64,8 @@
                     @enderror
 
                     <!-- Tipo Menu -->
-                    <x-form-element id="tipo_menu_id" type="select" :params="$TipoMenus"
-                                    required="true"></x-form-element>
+                    <x-form-element id="tipo_menu_id" type="select" :params="$TipoMenus" required="true"
+                                    colSize="4"></x-form-element>
 
                     <!-- Menus -->
                     <x-form-element
@@ -72,7 +73,9 @@
                         classDiv="collapse {{ in_array(old('tipo_menu_id') , [3, 4]) ? 'show' : '' }}"
                         id="menu_id"
                         type="select" :params="$Menus"
-                        required="true">
+                        required="true"
+                        colSize="4"
+                    >
                     </x-form-element>
 
                     <!-- Nombre ruta -->
@@ -80,7 +83,9 @@
                         idDiv="collapseNombreRuta"
                         classDiv="collapse {{ in_array(old('tipo_menu_id') , [1, 3]) ? 'show' : '' }}"
                         id="nombre_ruta"
-                        required="true">
+                        required="true"
+                        colSize="4"
+                    >
                     </x-form-element>
 
                     <!-- Botones -->
