@@ -6,6 +6,7 @@ use App\Http\Requests\StoreSubcategoriaRequest;
 use App\Http\Requests\UpdateSubcategoriaRequest;
 use App\Models\Categoria;
 use App\Models\Subcategoria;
+use App\Models\TipoDescuento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -33,7 +34,10 @@ class subcategoriaController extends actionPermissionController
     {
         $Categorias = Categoria::where('estado', 1)
             ->get();
-        return view('subcategoria.create', compact('Categorias'));
+
+        $TipoDescuentos = TipoDescuento::all();
+
+        return view('subcategoria.create', compact('Categorias', 'TipoDescuentos'));
     }
 
     /**
@@ -89,7 +93,9 @@ class subcategoriaController extends actionPermissionController
     {
         $Categorias = Categoria::where('estado', 1)
             ->get();
-        return view('subcategoria.edit', compact('Categorias', 'Subcategoria'));
+        $TipoDescuentos = TipoDescuento::all();
+
+        return view('subcategoria.edit', compact('Categorias', 'Subcategoria', 'TipoDescuentos'));
     }
 
     /**
@@ -101,14 +107,20 @@ class subcategoriaController extends actionPermissionController
             DB::beginTransaction();
             if ($request->categoria_id == -1) {
                 $Categoria = Categoria::create([
-                    'nombre' => $request->nombre_categoria
+                    'nombre' => $request->nombre_categoria,
                 ]);
                 $request['categoria_id'] = $Categoria->id;
             }
-            $Subcategoria->update([
+            $SubcategoriaArray = [
                 'nombre' => $request->nombre,
-                'categoria_id' => $request->categoria_id
-            ]);
+                'descuento' => $request->descuento,
+                'piezas' => $request->piezas,
+                'paga' => $request->paga,
+                'tipo_descuento_id' => $request->tipo_descuento_id,
+                'categoria_id' => $request->categoria_id,
+            ];
+            $Subcategoria->update($SubcategoriaArray);
+            $this->register->registro('subcategorias', $Subcategoria->id, 5, $SubcategoriaArray);
             $Mensaje = 'success__Actualizado correctamente';
             DB::commit();
         } catch (\Exception $e) {

@@ -31,12 +31,18 @@
                         <th>Nombre</th>
                         <th>Domicilio</th>
                         <th>Descripcion</th>
+                        <th>Imagen</th>
+                        <th>Encabezado Ticket</th>
+                        <th>Pie Ticket</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($Tiendas as $Tienda)
+                    @foreach($Tiendas as $index => $Tienda)
+                            <?php
+                            $Tiendas[$index]['url'] = Storage::url('public/tiendas/' . $Tienda->imagen);
+                            ?>
                         <tr>
                             <!-- id -->
                             <td>{{ $Tienda->id }}</td>
@@ -46,6 +52,21 @@
                             <td>{{ $Tienda->domicilio ?? '' }}</td>
                             <!-- Descripción -->
                             <td>{{ $Tienda->descripcion ?? '' }}</td>
+                            <!-- Imagen -->
+                            <td>
+                                @if($Tienda->imagen)
+                                    <a onclick="ImagenModal({{ json_encode($Tienda) }})" href="#/">
+                                        <img height="150" width="150"
+                                             src="{{ Storage::url('public/tiendas/' . $Tienda->imagen) }}"
+                                             alt="{{ $Tienda->imagen }}"
+                                        >
+                                    </a>
+                                @endif
+                            </td>
+                            <!-- Encabezado Ticket -->
+                            <td>{{ $Tienda->encabezado_ticket ?? '' }}</td>
+                            <!-- Pie Ticket -->
+                            <td>{{ $Tienda->pie_ticket ?? '' }}</td>
                             <!-- Estado -->
                             <td class="text-center">
                                 @if($Tienda->estado == 1)
@@ -63,6 +84,29 @@
                     @endforeach
                     </tbody>
                 </table>
+
+                <!-- Modal Imagen -->
+                <div class="modal fade" id="ModalImagen" tabindex="-1"
+                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-10" id="NombreImagen"></h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>&nbsp;
+                            </div>
+                            <div class="modal-body table-responsive" id="TableImagenModal">
+                                <img id="ImagenGrande"
+                                     class="img-fluid .img-thumbnail border border-4 rounded"
+                                     src="">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar
+                                </button>&nbsp;
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -71,5 +115,17 @@
 @endsection
 
 @push('js')
+    <script>
+        $(document).ready(function () {
 
+        });
+
+        const ImagenModal = (data) => {
+            console.log(data);
+            $('#NombreImagen').html(data.nombre);
+            $('#ImagenGrande').attr('src', data.url);
+            $('#ModalImagen').modal('show');
+        }
+
+    </script>
 @endpush

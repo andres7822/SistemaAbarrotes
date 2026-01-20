@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateTiendaRequest;
 use App\Models\Tienda;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class tiendaController extends actionPermissionController
 {
@@ -40,6 +41,11 @@ class tiendaController extends actionPermissionController
     {
         try {
             DB::beginTransaction();
+            $NameImage = null;
+            if ($request->hasFile('imagen')) {
+                $NameImage = Tienda::handleUploadImage($request->file('imagen'));
+                $request['imagen'] = $NameImage;
+            }
             $Tienda = Tienda::create($request->all());
             $this->register->registro('tiendas', $Tienda->id, 4, $Tienda->toArray());
             $Mensaje = 'success__Agregado correctamente';
@@ -82,7 +88,17 @@ class tiendaController extends actionPermissionController
     {
         try {
             DB::beginTransaction();
+            $NameImage = $Tienda->imagen;
+            if ($request->hasFile('imagen')) {
+                $NameImage = Tienda::handleUploadImage($request->file('imagen'));
+                if (Storage::disk('public')->exists('/tiendas/' . $Tienda->imagen)) {
+                    Storage::disk('public')->delete('/tiendas/' . $Tienda->imagen);
+                }
+            }
             $Tienda->update($request->except('_token', '_method'));
+            $Tienda->update([
+                'imagen' => $NameImage
+            ]);
             $this->register->registro('tiendas', $Tienda->id, 5, $Tienda->toArray());
             $Mensaje = 'success__Actualizado correctamente';
             DB::commit();

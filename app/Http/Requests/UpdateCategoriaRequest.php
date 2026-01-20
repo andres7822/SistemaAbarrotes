@@ -25,7 +25,7 @@ class UpdateCategoriaRequest extends FormRequest
     {
         $Categoria = $this->route('categoria');
         return [
-            'nombre' => 'required|max:64|unique:categorias,nombre,' . $Categoria->id
+            'nombre.*' => 'required|max:64|unique:categorias,nombre,' . $Categoria->id
         ];
     }
 }

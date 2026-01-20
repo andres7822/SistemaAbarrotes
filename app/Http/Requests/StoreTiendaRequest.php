@@ -26,7 +26,10 @@ class StoreTiendaRequest extends FormRequest
         return [
             'nombre' => 'required|max:64|unique:tiendas,nombre',
             'descripcion' => 'nullable',
-            'domicilio' => 'nullable'
+            'domicilio' => 'nullable',
+            'imagen' => 'nullable',
+            'encabezado_ticket' => 'nullable',
+            'pie_ticket' => 'nullable',
         ];
     }
 }

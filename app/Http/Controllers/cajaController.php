@@ -69,6 +69,18 @@ class cajaController extends actionPermissionController
      */
     public function create()
     {
+        $tienda_id = auth()->user()->tienda_id;
+        $user_id = auth()->user()->id;
+
+        $Caja = Caja::where([
+            'tienda_id' => $tienda_id
+        ])
+            ->whereNull('fecha_cierre')
+            ->get();
+
+        if (sizeof($Caja) > 0) {
+            return redirect()->route('caja.index')->with('mensaje', 'warning__Ya hay una caja abierta en esta tienda');
+        }
         return view('caja.create');
     }
 
@@ -81,7 +93,8 @@ class cajaController extends actionPermissionController
             DB::beginTransaction();
             $CajaArr = [
                 'cantidad_inicial' => $request->cantidad_inicial,
-                'user_id' => auth()->user()->id
+                'user_id' => auth()->user()->id,
+                'tienda_id' => auth()->user()->tienda_id
             ];
             $Caja = Caja::create($CajaArr);
             $Mensaje = 'success__Caja abierta correctamente';

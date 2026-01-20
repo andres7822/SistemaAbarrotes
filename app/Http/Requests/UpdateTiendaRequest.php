@@ -27,7 +27,10 @@ class UpdateTiendaRequest extends FormRequest
         return [
             'nombre' => 'required|max:64|unique:tiendas,nombre,' . $Tienda->id,
             'domicilio' => 'nullable',
-            'descripcion' => 'nullable'
+            'descripcion' => 'nullable',
+            'imagen' => 'nullable',
+            'encabezado_ticket' => 'nullable',
+            'pie_ticket' => 'nullable',
         ];
     }
 }

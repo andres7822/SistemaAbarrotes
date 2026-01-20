@@ -16,7 +16,7 @@ class SuperAdminBypass
 
         $user = auth()->user();
 
-        // 🔥 Condición PRO: usuario ID=1 O rol ID=1
+        //Condición PRO: usuario ID=1 O rol ID=1
         $isSuperById = $user->id == 1;
 
         // Obtenemos roles del usuario via Spatie
@@ -24,7 +24,7 @@ class SuperAdminBypass
 
         $isSuperByRoleId = ($role && $role->id == 1);
 
-        // 🔥 Si cumple cualquiera -> bypass total
+        //Si cumple cualquiera -> bypass total
         if ($isSuperById || $isSuperByRoleId) {
 
             // Sobreescribir middlewares de Spatie para que siempre permitan

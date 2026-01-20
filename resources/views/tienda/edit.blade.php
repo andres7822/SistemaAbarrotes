@@ -18,7 +18,8 @@
         </ol>
 
         <div class="container w-100 border border-3 border-primary rounded p-4 mt-3">
-            <form action="{{route('tienda.update', ['tienda' => $Tienda])}}" method="post" autocomplete="off">
+            <form action="{{route('tienda.update', ['tienda' => $Tienda])}}" method="post" autocomplete="off"
+                  enctype="multipart/form-data">
                 @method('PUT')
                 @csrf
                 {{--PARA ENVIAR FORMULARIOS--}}
@@ -28,10 +29,19 @@
                                     value="{{$Tienda->nombre}}"></x-form-element>
 
                     <!-- Domicilio -->
-                    <x-form-element id="domicilio" colSize="6" value="{{$Tienda->domicilio}}"></x-form-element>
+                    <x-form-element id="domicilio" colSize="6" value="{{ $Tienda->domicilio }}"></x-form-element>
 
                     <!-- Descripcion -->
-                    <x-form-element id="descripcion" type="textarea" value="{{$Tienda->descripcion}}"></x-form-element>
+                    <x-form-element id="descripcion" type="textarea" value="{{ $Tienda->descripcion }}"></x-form-element>
+
+                    <!-- Imagen -->
+                    <x-form-element id="imagen" type="file" accept="image/*"></x-form-element>
+
+                    <!-- Encabezado Ticket -->
+                    <x-form-element id="encabezado_ticket" type="textarea" value="{{ $Tienda->encabezado_ticket }}"></x-form-element>
+
+                    <!-- Pie Ticket -->
+                    <x-form-element id="pie_ticket" type="textarea" value="{{ $Tienda->pie_ticket }}"></x-form-element>
 
                     <!-- Botones -->
                     <x-form-buttons routeName="tienda" isEdit="true"></x-form-buttons>

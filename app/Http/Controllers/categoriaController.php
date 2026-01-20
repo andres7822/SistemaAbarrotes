@@ -67,9 +67,19 @@ class categoriaController extends actionPermissionController
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Categoria $Categoria)
+    public function edit(Request $request, Categoria $Categoria)
     {
-        return view('categoria.edit', compact('Categoria'));
+        //return $request;
+        $Categorias = Categoria::where('id', $Categoria->id)
+            ->get();
+        if ($request->multi_edit) {
+            $ids = trim($request->ids, ',');
+            $ids = explode(',', $ids);
+            $Categorias = Categoria::whereIn('id', $ids)
+                ->get();
+        }
+        //return $Categorias;
+        return view('categoria.edit', compact('Categorias'));
     }
 
     /**

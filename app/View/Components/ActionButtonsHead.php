@@ -6,15 +6,16 @@ use Illuminate\View\Component;
 
 class ActionButtonsHead extends Component
 {
-    public $routeName, $pdfFile, $pdfRoute, $pdfButtonName, $userId, $roleId;
+    public $routeName, $params, $pdfFile, $pdfRoute, $pdfButtonName, $userId, $roleId;
 
     /**
      * @param string $routeName
      */
-    public function __construct(string $routeName = '', bool $pdfFile = false, string $pdfRoute = '',
+    public function __construct(string $routeName = '', $params = '[]', bool $pdfFile = false, string $pdfRoute = '',
                                 string $pdfButtonName = 'Generar PDF')
     {
         $this->routeName = $routeName;
+        $this->params = $params;
         $this->pdfFile = $pdfFile;
         $this->pdfRoute = $pdfRoute == '' ? $routeName . '.reporte' : $pdfRoute;
         $this->pdfButtonName = $pdfButtonName;

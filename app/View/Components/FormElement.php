@@ -7,13 +7,14 @@ use Illuminate\View\Component;
 
 class FormElement extends Component
 {
-    public $id, $label, $type, $value, $accept, $colSize, $required, $params, $placeholder, $optionValue,
+    public $id, $name, $label, $type, $value, $accept, $colSize, $required, $params, $placeholder, $optionValue,
         $optionContent, $optionContentExtra, $optionsExtraFirst, $optionsExtraEnd, $classDiv, $idDiv, $focused,
-        $readonly, $classForm, $dataOptions;
+        $readonly, $classForm, $dataOptions, $defaultTextOption;
 
     /**
      * @param $id
      * @param null $label
+     * @param null $name
      * @param string $type
      * @param null $value
      * @param string $accept
@@ -32,15 +33,18 @@ class FormElement extends Component
      * @param bool $readonly
      * @param string $classForm
      * @param string $dataOptions
+     * @param string $defaultTextOption
      */
-    public function __construct($id, $label = null, string $type = 'text', $value = null, string $accept = '', int $colSize = 12,
+    public function __construct($id, $label = null, $name = null, string $type = 'text', $value = null,
+                                string $accept = '', int $colSize = 12,
                                 bool $required = false, object $params = null, string $placeholder = '',
                                 string $optionValue = 'id', string $optionContent = '', string $optionContentExtra = '',
                                 array $optionsExtraFirst = [], array $optionsExtraEnd = [], string $classDiv = '',
                                 string $idDiv = '', bool $focused = false, bool $readonly = false,
-                                string $classForm = '', string $dataOptions = '')
+                                string $classForm = '', string $dataOptions = '', string $defaultTextOption = 'SELECCIONE UNA OPCIÓN...')
     {
         $this->id = $id;
+        $this->name = $name ?? $id;
         $this->label = $label ?? Str::of($id)->replace(['_id', '_'], ['', ' '])->title();
         $this->type = $type;
         $this->value = old($id, $value);
@@ -60,6 +64,7 @@ class FormElement extends Component
         $this->readonly = $readonly;
         $this->classForm = $classForm;
         $this->dataOptions = $dataOptions;
+        $this->defaultTextOption = $defaultTextOption;
     }
 
     /**

@@ -19,5 +19,10 @@ class Subcategoria extends Model
         return $this->hasMany(Producto::class);
     }
 
-    protected $fillable = ['nombre', 'categoria_id'];
+    public function tipo_descuento()
+    {
+        return $this->belongsTo(TipoDescuento::class);
+    }
+
+    protected $guarded = ['id'];
 }

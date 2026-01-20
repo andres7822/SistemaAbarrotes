@@ -15,7 +15,10 @@
 @section('content')
 
     <div class="container-fluid px-4">
-        <h1 class="mt-4">Crear Nuevo Venta</h1>
+        <h1 class="mt-4">
+            Crear Nuevo Venta<br>
+            Folio: {{ $Venta->folio }}
+        </h1>
 
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item"><a href="{{route('home')}}">Inicio</a></li>
@@ -24,7 +27,7 @@
         </ol>
 
         <div class="container w-100 border border-3 border-primary rounded p-4 mt-3">
-            <form action="{{route('venta.store')}}" method="post" autocomplete="off">
+            <form action="{{route('venta.store')}}" method="post" autocomplete="off" id="formulario">
                 @csrf
                 <div class="row g-3">
 
@@ -199,12 +202,26 @@
                     <!-- Botones -->
                     {{--<x-form-buttons routeName="venta"></x-form-buttons>--}}
                     <div class="col-md-12 mb-2 text-center">
-                        <button type="submit" class="btn btn-success" name="accion" value="continuar">
+                        <button type="button" onclick="ValidarPagar('Continuar')" class="btn btn-success" name="accion"
+                                value="continuar">
                             <i class="fa fa-save" aria-hidden="true"></i>
                             Guardar y continuar
                             <i class="fa fa-arrow-right" aria-hidden="true"></i>
                         </button>
-                        <button type="submit" class="btn btn-primary" name="accion" value="regresar">
+                        <button type="button" onclick="ValidarPagar('Regresar')" class="btn btn-primary" name="accion"
+                                value="regresar">
+                            <i class="fa fa-save" aria-hidden="true"></i>
+                            Guardar y regresar
+                            <i class="fa fa-undo" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="d-none col-md-12 mb-2 text-center">
+                        <button type="submit" class="btn btn-success" name="accion" id="btnContinuar" value="continuar">
+                            <i class="fa fa-save" aria-hidden="true"></i>
+                            Guardar y continuar
+                            <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                        </button>
+                        <button type="submit" class="btn btn-primary" name="accion" id="btnRegresar" value="regresar">
                             <i class="fa fa-save" aria-hidden="true"></i>
                             Guardar y regresar
                             <i class="fa fa-undo" aria-hidden="true"></i>
@@ -234,6 +251,9 @@
         let count = {{ old('inventarios') ? count(old('inventarios')) : 0 }};
         let cargado = false;
         let venta_detalle_id = 0;
+        let totalPagado = 0;
+        let faltante = 0;
+        let cambio = 0;
 
         $(document).ready(function () {
 
@@ -257,6 +277,28 @@
                 }
             });
 
+            $('#cliente_id').change(function () {
+                const cliente_id = $(this).val();
+                SwalLoading();
+                $.ajax({
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        venta_id,
+                        cliente_id
+                    },
+                    type: 'POST',
+                    url: "{{ route('venta.actualizar_cliente') }}",
+                    dataType: 'json',
+                    success: function (response) {
+                        Swal.close();
+                        if (response.status == 'error')
+                            SwalAlert(error.status, error.message);
+                    }, error: function (error) {
+                        SwalAlert(error.status, error.message);
+                    }
+                });
+            });
+
             $(document).on('shown.bs.select', '#inventario_id', function () {
                 if (!cargado) {
                     listadoSelect();
@@ -268,14 +310,26 @@
                 cargado = false;
             });
 
-            document.getElementById('cantidad').addEventListener('keydown', function (event) {
+            /*document.getElementById('cantidad').addEventListener('keydown', function (event) {
                 // Verificar si la tecla presionada es 'Enter'
                 if (event.key === 'Enter') {
                     event.preventDefault(); // Prevenir el envío del formulario
                     AgregarVentaDetalle();
                 }
-            });
+            });*/
 
+            document.getElementById('formulario').addEventListener('keydown', function (event) {
+                //Verificar la tecla enter
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Prevenir el envío del formulario
+                    const inputHtml = event.target;
+                    if (inputHtml.id == 'cantidad') {
+                        AgregarVentaDetalle();
+                    } else {
+                        ValidarPagar('Continuar');
+                    }
+                }
+            });
 
             $('#cantidad').keyup(function () {
                 const precio = $('#precio_venta').val() != '' ? $('#precio_venta').val() : 0;
@@ -322,13 +376,13 @@
 
                     const select = $('#inventario_id');
 
-                    // 🔥 Destruir el selectpicker
+                    //Destruir el selectpicker
                     select.selectpicker('destroy');
 
                     // Limpiar y establecer nuevas opciones
                     select.empty().append(response.options);
 
-                    // 🔥 Reactivar el selectpicker
+                    //Reactivar el selectpicker
                     select.selectpicker().selectpicker('toggle');
                 }, error: function (error) {
                     SwalAlert(error.status, error.message);
@@ -386,6 +440,18 @@
                 '</tr>';
             venta_detalle_id = 0;
             ActualizarInventario('-1', cantidad, idInventario, trProducto);
+
+            const select = $('#inventario_id');
+
+            //Destruir el selectpicker
+            select.selectpicker('destroy');
+
+            // Limpiar y establecer nuevas opciones
+            select.empty().append('<option value="">SELECCIONE UNA OPCIÓN...</option>');
+
+            //Reactivar el selectpicker
+            select.selectpicker()
+            idInventario = '';
         }
 
         const EliminarVentaDetalle = (index) => {
@@ -407,13 +473,13 @@
         const CalcularCambio = () => {
             let efectivo = $('#efectivo').val() != '' ? $('#efectivo').val() * 1 : 0;
             let pagoCon = $('#pago_con').val() != '' ? $('#pago_con').val() * 1 : 0;
-            let cambio = pagoCon - efectivo;
+            cambio = pagoCon - efectivo;
             $('#cambio').val(cambio);
         }
 
         const CalcularDebe = () => {
-            let totalPagado = 0;
-            let faltante = 0;
+            totalPagado = 0;
+            faltante = 0;
             $('.formasPagos').each(function () {
                 totalPagado += $(this).val() != '' ? $(this).val() * 1 : 0;
             });
@@ -469,6 +535,50 @@
                     SwalAlert('error', 'Ha ocurrido un error', error.responseJSON.message);
                 }
             })
+        }
+
+        const CobrarVenta = () => {
+
+            const efectivo = $('#efectivo').val() != '' ? $('#efectivo').val() : 0;
+            const pago_con = $('#pago_con').val() != '' ? $('#pago_con').val() : 0;
+            const tarjeta_debito = $('#tarjeta_debito').val() != '' ? $('#tarjeta_debito').val() : 0;
+            const tarjeta_credito = $('#tarjeta_credito').val() != '' ? $('#tarjeta_credito').val() : 0;
+            const transferencia = $('#transferencia').val() != '' ? $('#transferencia').val() : 0;
+            const deposito = $('#deposito').val() != '' ? $('#deposito').val() : 0;
+
+            const totalPagar = efectivo + tarjeta_debito + tarjeta_credito + transferencia + deposito;
+
+            if (efectivo < 0 || pago_con < 0 || tarjeta_debito < 0 || tarjeta_credito < 0 || transferencia < 0 || deposito < 0) {
+                SwalToast('No debe haber números menor a 0', 'warning', 3000, 'top');
+                return false;
+            }
+            if (cambio < 0) {
+                SwalToast('Campo efectivo debe ser menor o igual al campo "pago con"', 'warning', 3000, 'top');
+                return false;
+            }
+            if (faltante < 0) {
+                SwalToast('Total a pagar es mayor al valor de lo que debe', 'warning', 3000, 'top');
+                return false;
+            }
+            if (faltante > 0) {
+                SwalToast('Total a pagar es menor al total de la venta', 'warning', 3000, 'top');
+                return false;
+            }
+            if (!(totalPagar > 0)) {
+                SwalToast('Rellene los campos necesarios', 'warning', 3000, 'top');
+                return false;
+            }
+            return true;
+        }
+
+        const ValidarPagar = (typeBtn) => {
+            if ($('#pagara').is(':checked')) {
+                if (CobrarVenta()) {
+                    $(`#btn${typeBtn}`).trigger('click');
+                }
+            } else {
+                $(`#btn${typeBtn}`).trigger('click');
+            }
         }
 
     </script>

@@ -171,10 +171,10 @@
                                                 onclick="imprimirTicket({{ json_encode($Venta) }})">
                                             <i class="fa fa-print" aria-hidden="true"></i>
                                         </button>
-                                       {{-- <a href="{{ route('venta.imprimir_ticket') }}"
-                                           class="btn btn-sm btn-danger" target="_blank">
-                                            <i class="fa fa-print" aria-hidden="true"></i>
-                                        </a>--}}
+                                        {{-- <a href="{{ route('venta.imprimir_ticket') }}"
+                                            class="btn btn-sm btn-danger" target="_blank">
+                                             <i class="fa fa-print" aria-hidden="true"></i>
+                                         </a>--}}
                                     </div>
                                 </td>
                             @endif
@@ -258,7 +258,13 @@
         let dataVenta = '';
         let faltante = 0;
         let cambio = 0;
+        let venta_id = {{ $venta_id }}
         $(document).ready(function () {
+
+            if (venta_id != 0) {
+                imprimirTicket({id: venta_id})
+            }
+
             $('#efectivo').keyup(function () {
                 CalcularCambio();
             });
@@ -359,9 +365,9 @@
                     if (response.status == 'success') {
                         SwalAlert(response.status, response.message)
                             .then(() => {
-                                console.log('cerrado alert');
                                 $('#datatablesSimple').load(location.href + ' #datatablesSimple > *');
                                 $('#ModalCobrar').modal('hide');
+                                imprimirTicket(dataVenta);
                             })
                     } else {
                         SwalAlert(response.status, response.message);

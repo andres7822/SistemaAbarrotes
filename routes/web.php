@@ -68,6 +68,7 @@ Route::middleware('auth')->group(function () {
 //-----------------AJAXS-------------------------
 Route::post('subcategoria/subcategoria_by_cat', [subcategoriaController::class, 'subcategoriaByCat'])->name('subcategoria.subcategoria_by_cat');
 Route::post('venta/cobrar_venta', [ventaController::class, 'cobrarVenta'])->name('venta.cobrar_venta');
+Route::post('venta/actualizar_cliente', [ventaController::class, 'actualizarCliente'])->name('venta.actualizar_cliente');
 Route::post('inventario/listado_select', [inventarioController::class, 'listadoSelect'])->name('inventario.listado_select');
 Route::post('inventario/actualizar_inventario', [inventarioController::class, 'actualizarInventario'])->name('inventario.actualizar_inventario');
 //-----------------------------------------------

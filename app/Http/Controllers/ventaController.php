@@ -27,13 +27,20 @@ class ventaController extends actionPermissionController
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $venta_id = $request->venta_id ?? 0;
+        if ($venta_id != 0) {
+            $Venta = Venta::find($venta_id);
+            if ($Venta->ultimo_pago == 0)
+                $venta_id = 0;
+        }
         $Ventas = Venta::orderBy('estado_cobro')
+            ->orderBy('fecha', 'desc')
             ->get();
         $Cajas = Caja::whereNull('fecha_cierre')
             ->get();
-        return view('venta.index', compact('Ventas', 'Cajas'));
+        return view('venta.index', compact('Ventas', 'Cajas', 'venta_id'));
     }
 
     /**
@@ -45,6 +52,7 @@ class ventaController extends actionPermissionController
             $Venta = Venta::find(old('venta_id'));
         } else {
             $user_id = auth()->user()->id;
+            $tienda_id = auth()->user()->tienda_id;
 
             $Folio = Venta::select('folio')
                 ->whereRaw('YEAR(fecha) = YEAR(NOW()) and tipo_venta_id = ?', 1)
@@ -63,7 +71,8 @@ class ventaController extends actionPermissionController
             $Venta = Venta::create([
                 'user_id' => $user_id,
                 'tipo_venta_id' => 1,
-                'folio' => $Folio
+                'folio' => $Folio,
+                'tienda_id' => $tienda_id
             ]);
         }
 
@@ -208,7 +217,9 @@ class ventaController extends actionPermissionController
 
             $this->register->registro('ventas', $Venta->id, 4, $Venta->toArray());
             $Mensaje = 'success__Creado correctamente';
+
             DB::commit();
+
         } catch (\Exception $e) {
             $Mensaje = 'error__' . $e->getMessage();
             DB::rollBack();
@@ -216,7 +227,7 @@ class ventaController extends actionPermissionController
         }
 
         if ($request->accion == 'continuar') {
-            return redirect()->route('venta.index')->with('mensaje', $Mensaje);
+            return redirect()->route('venta.index', ['venta_id' => $Venta->id])->with('mensaje', $Mensaje);
         }
         return redirect()->route('venta.create')->with('mensaje', $Mensaje);
     }
@@ -347,6 +358,25 @@ class ventaController extends actionPermissionController
         return redirect()->route('venta.index')->with('mensaje', $Mensaje);
     }
 
+    public function actualizarCliente(Request $request)
+    {
+        try {
+            Venta::find($request->venta_id)
+                ->update([
+                    'cliente_id' => $request->cliente_id
+                ]);
+            return [
+                'status' => 'success'
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return [
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
     public function cobrarVenta(Request $request)
     {
 //        return $request;
@@ -431,8 +461,9 @@ class ventaController extends actionPermissionController
         $Venta = Venta::with('venta_detalle')
             ->find($venta_id);
 
-        $pdf = Pdf::loadView('venta.imprimirTicket', compact('Venta'));
+        /*$pdf = Pdf::loadView('venta.imprimirTicket', compact('Venta'));
 
-        return $pdf->stream($Venta->folio . '.pdf');
+        return $pdf->stream($Venta->folio . '.pdf');*/
+        return view('venta.imprimirTicket', compact('Venta'));
     }
 }

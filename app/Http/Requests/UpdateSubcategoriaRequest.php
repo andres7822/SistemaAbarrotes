@@ -26,8 +26,12 @@ class UpdateSubcategoriaRequest extends FormRequest
         $Subcategoria = $this->route('subcategoria');
         return [
             'nombre' => 'required|max:64|unique:subcategorias,nombre,' . $Subcategoria->id,
-            'categoria_id' => 'required|integer',
             'nombre_categoria' => 'exclude_unless:categoria_id,-1|required|max:64|unique:categorias,nombre,' . $Subcategoria->categoria_id,
+            'descuento' => 'exclude_unless:tipo_descuento_id,1,2,4,5|required',
+            'piezas' => 'exclude_unless:tipo_descuento_id,3,4,5|required',
+            'paga' => 'exclude_unless:tipo_descuento_id,3,5|required',
+            'categoria_id' => 'required|integer',
+            'tipo_descuento_id' => 'nullable'
         ];
     }
 }

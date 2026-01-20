@@ -25,7 +25,15 @@
                     <x-form-element id="cantidad_inicial" required="true" focused="true"></x-form-element>
 
                     <!-- Botones -->
-                    <x-form-buttons routeName="caja"></x-form-buttons>
+                    <div class="col-md-12 mb-2 text-center">
+                        <button type="submit" class="btn btn-success" name="accion" value="continuar">
+                            <i class="fa fa-save" aria-hidden="true"></i>
+                            Guardar y continuar
+                            <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                        </button>
+                        <a class="btn btn-danger" href="{{ route('caja.index') }}">Cancelar</a>
+                    </div>
+
 
                 </div>
             </form>

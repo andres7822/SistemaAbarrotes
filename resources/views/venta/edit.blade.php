@@ -98,7 +98,7 @@
 
                     <div class="col-md-4">
                         <label class="form-check-label">Total Pagado: $<span
-                                    id="spanPagado">{{ number_format(old('inputTotalPagado', $Venta->ultimo_pago), 2) }}</span></label>
+                                id="spanPagado">{{ number_format(old('inputTotalPagado', $Venta->ultimo_pago), 2) }}</span></label>
                         <input type="hidden" name="inputTotalPagado" id="inputTotalPagado"
                                value="{{ old('inputTotalPagado', $Venta->ultimo_pago) }}<">
                     </div>
@@ -292,6 +292,28 @@
                 }
             });
 
+            $('#cliente_id').change(function () {
+                const cliente_id = $(this).val();
+                SwalLoading();
+                $.ajax({
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        venta_id,
+                        cliente_id
+                    },
+                    type: 'POST',
+                    url: "{{ route('venta.actualizar_cliente') }}",
+                    dataType: 'json',
+                    success: function (response) {
+                        Swal.close();
+                        if (response.status == 'error')
+                            SwalAlert(error.status, error.message);
+                    }, error: function (error) {
+                        SwalAlert(error.status, error.message);
+                    }
+                });
+            })
+
             $('#cantidad').keyup(function () {
                 const precio = $('#precio_venta').val() != '' ? $('#precio_venta').val() : 0;
                 const cantidad = $(this).val() != '' ? $(this).val() : 0;
@@ -337,13 +359,13 @@
 
                     const select = $('#inventario_id');
 
-                    // 🔥 Destruir el selectpicker
+                    //Destruir el selectpicker
                     select.selectpicker('destroy');
 
                     // Limpiar y establecer nuevas opciones
                     select.empty().append(response.options);
 
-                    // 🔥 Reactivar el selectpicker
+                    //Reactivar el selectpicker
                     select.selectpicker().selectpicker('toggle');
                 }, error: function (error) {
                     SwalAlert(error.status, error.message);
@@ -398,6 +420,18 @@
                 '</tr>';
             venta_detalle_id = 0;
             ActualizarInventario('-1', cantidad, idInventario, trProducto);
+
+            const select = $('#inventario_id');
+
+            //Destruir el selectpicker
+            select.selectpicker('destroy');
+
+            // Limpiar y establecer nuevas opciones
+            select.empty().append('<option value="">SELECCIONE UNA OPCIÓN...</option>');
+
+            //Reactivar el selectpicker
+            select.selectpicker()
+            idInventario = '';
         }
 
         const EliminarVentaDetalle = (index) => {

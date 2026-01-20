@@ -16,7 +16,7 @@
             <li class="breadcrumb-item active">Categorias</li>
         </ol>
 
-        <x-action-buttons-head routeName="categoria"></x-action-buttons-head>
+        <x-action-buttons-head routeName="categoria" :params="$Categorias[0]"></x-action-buttons-head>
 
         <div class="card mb-4">
             <div class="card-header">
@@ -27,6 +27,9 @@
                 <table id="datatablesSimple" class="table table-striped">
                     <thead>
                     <tr>
+                        <th class="text-center" width="5">
+                            &nbsp;<input type="checkbox" id="checkAll">
+                        </th>
                         <th>id</th>
                         <th>Nombre</th>
                         <th>Estado</th>
@@ -36,6 +39,9 @@
                     <tbody>
                     @foreach($Categorias as $Categoria)
                         <tr>
+                            <td class="text-center">
+                                <input type="checkbox" class="checkbox" data-id="{{ $Categoria->id }}">
+                            </td>
                             <!-- id -->
                             <td>{{ $Categoria->id }}</td>
                             <!-- Nombre -->
@@ -65,5 +71,17 @@
 @endsection
 
 @push('js')
-
+    <script>
+        const checarBox = () => {
+            var ids = '';
+            $('.checkbox').each(function () {
+                if ($(this).is(':checked')) {
+                    const id = $(this).data('id') + ',';
+                    ids += id;
+                }
+            });
+            $('#ids').val(ids);
+            console.log(ids);
+        }
+    </script>
 @endpush
